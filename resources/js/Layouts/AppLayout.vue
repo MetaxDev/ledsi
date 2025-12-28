@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { router, usePage, Link } from '@inertiajs/vue3'
+import {computed} from 'vue'
+import {router, usePage, Link} from '@inertiajs/vue3'
 
 type User = {
     id: number
@@ -14,7 +14,9 @@ const user = computed<User | null>(() => {
     return (page.props.auth as any)?.user ?? null
 })
 
-const isLoggingOut = computed(() => false)
+function isActive(name: string) {
+    return route().current(name)
+}
 
 function logout() {
     router.post('/logout', {}, {
@@ -28,10 +30,23 @@ function logout() {
         <header class="sticky top-0 z-10 border-b border-white/10 bg-zinc-950/80 backdrop-blur">
             <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
                 <div class="flex items-center gap-4">
-                    <Link :href="route('tasks.index')" class="text-sm font-semibold tracking-wide">
+                    <Link
+                        :href="route('tasks.index')"
+                        class="text-sm font-semibold tracking-wide"
+                        :class="isActive('tasks.index')
+            ? 'text-white'
+            : 'text-zinc-300 hover:text-white'"
+                    >
                         Задачи
                     </Link>
-                    <Link :href="route('stats.index')" class="text-sm text-zinc-300 hover:text-white">
+
+                    <Link
+                        :href="route('stats.index')"
+                        class="text-sm font-semibold tracking-wide"
+                        :class="isActive('stats.index')
+            ? 'text-white'
+            : 'text-zinc-300 hover:text-white'"
+                    >
                         Статистика
                     </Link>
                 </div>
@@ -54,7 +69,7 @@ function logout() {
         </header>
 
         <main class="mx-auto max-w-5xl px-4 py-6">
-            <slot />
+            <slot/>
         </main>
     </div>
 </template>

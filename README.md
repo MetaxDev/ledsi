@@ -47,7 +47,7 @@ docker compose up -d --build
 ### Тестовые юзеры
 
 - Админ: mail - admin@test.ru pass - 1 
-- Юзер: mail - test@test.ru pass - 1
+- Юзер: mail - user@test.ru pass - 1
 #### Регистрация работает, можно сделать новых
 
 ## Примечания
