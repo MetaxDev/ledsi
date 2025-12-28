@@ -1,59 +1,56 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel + Inertia (Vue 3) + Sanctum — Tasks / Stats
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Тестовое приложение:
+- Регистрация и аутентификация пользователей через cookie-based сессию (Laravel `web`) + доступ к API через `auth:sanctum`
+- CRUD задач пользователя
+- Статистика по задачам (кэшируется на 60 секунд, сбрасывается при изменениях задач через Observer)
+- Админ-режим: список пользователей и просмотр статистики по выбранному пользователю
+- Redis используется как `CACHE_STORE`
+- Внешняя API-интеграция: получение данных из публичного API при логине пользователя, кэширование результата в Redis (5 минут) и отображение на странице задач
 
-## About Laravel
+## Стек
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel (API + web routes)
+- Inertia.js + Vue 3 + TypeScript
+- PostgreSQL
+- Redis (cache)
+- Docker Compose (app + node + db + redis)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Быстрый старт (Docker)
 
-## Learning Laravel
+### 1) Запуск контейнеров
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```
+docker compose up -d --build
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Контейнер app автоматически:
 
-## Laravel Sponsors
+- выполнит composer install
+- скопирует .env.example в .env
+- сгенерирует APP_KEY
+- выполнит миграции
+- сделает сид тестовых юзеров
+- запустит php artisan serve на 0.0.0.0:8000
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Контейнер node запустит Vite dev server на 0.0.0.0:5173.
 
-### Premium Partners
+### URLs
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Laravel: http://localhost:8000
+- Vite: http://localhost:5173
 
-## Contributing
+Фронт и бэк на разных портах, авторизация работает через cookie (Sanctum SPA).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Тестовые юзеры
 
-## Code of Conduct
+- Админ: mail - admin@test.ru pass - 1 
+- Юзер: mail - test@test.ru pass - 1
+#### Регистрация работает, можно сделать новых
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Примечания
+- Axios instance находится в resources/js/api.ts и настроен с withCredentials: true.
+- Для стабильной работы на localhost рекомендуется использовать один и тот же хост (например localhost), чтобы не путаться с cookie.
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
