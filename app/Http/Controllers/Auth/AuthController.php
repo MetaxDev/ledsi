@@ -57,12 +57,12 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        $this->catService->forgetFor($request->user());
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        $this->catService->forgetFor($request->user());
 
         return redirect()->route('login');
     }
