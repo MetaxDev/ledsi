@@ -57,7 +57,7 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
-        $this->catService->forgetFor($request->user());
+        $this->catService->forgetFor($request->user()->id);
 
         Auth::logout();
 
